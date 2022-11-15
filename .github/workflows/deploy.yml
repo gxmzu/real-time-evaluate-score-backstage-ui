@@ -1,0 +1,21 @@
+name: 自动部署
+
+on:
+  push:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 检出分支
+        uses: actions/checkout@v3
+
+      - name: 2. 推送到服务器私有仓库
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_ACCESS_TOKEN }}
+          ARGS: "-avz --delete"
+          SOURCE: "/"
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          TARGET: ${{ secrets.SERVER_TARGET }}
